@@ -1,105 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H Siddarth | Personal Website</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H Siddarth | Personal Website & Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-    <nav>
-        <h2>H Siddarth</h2>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+<!-- traceline svg divider template used across sections -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0"/>
+    </filter>
+  </defs>
+</svg>
 
-        <button id="themeBtn">🌙</button>
-    </nav>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="nav__mark" href="#top">H·S</a>
+  <nav class="nav__links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#work">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark and light mode" title="Toggle theme">
+    <span class="theme-toggle__track">
+      <span class="theme-toggle__thumb"></span>
+    </span>
+    <span class="theme-toggle__labels">
+      <span class="lbl-dark">dark</span>
+      <span class="lbl-light">light</span>
+    </span>
+  </button>
+  <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
-<section class="hero">
-    <h1>Hello, I'm <span>H Siddarth</span></h1>
-    <p>Student | Programmer | Web Developer</p>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#work">Projects</a>
+  <a href="#contact">Contact</a>
+</div>
 
-    <a href="#contact" class="btn">Contact Me</a>
-</section>
+<main id="top">
 
-<section id="about">
-    <h2>About Me</h2>
-    <p>
-        I am a passionate student interested in software development,
-        competitive programming, and web technologies. I enjoy solving
-        challenging problems and building useful applications.
-    </p>
-</section>
-
-<section id="skills">
-    <h2>Skills</h2>
-
-    <div class="cards">
-        <div class="card">HTML</div>
-        <div class="card">Python</div>
-        <div class="card">Event Management</div>
-        <div class="card">Data Analytics</div>
-        <div class="card">Public Speaking</div>
-        <div class="card">Git</div>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__content">
+      <p class="eyebrow"><span class="eyebrow__dot"></span>Available for select engagements</p>
+      <h1 class="hero__name">H&nbsp;Siddarth</h1>
+      <p class="hero__role">Student exploring <span class="ital">tangled</span> systems.</p>
+      <div class="hero__cta">
+        <a href="#work" class="btn btn--primary">See the work</a>
+        <a href="#contact" class="btn btn--ghost">Get in touch</a>
+      </div>
     </div>
-</section>
+    <div class="hero__scroll" aria-hidden="true">
+      <span></span>
+      <p>scroll</p>
+    </div>
+    <svg class="hero__trace" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+      <path id="heroTracePath" d="M0,120 C120,20 240,180 360,100 S600,20 720,110 S960,190 1080,90 S1320,10 1440,100" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+    </svg>
+  </section>
 
-<section id="education">
-    <h2>Education</h2>
-    <div class="timeline">
-        <div>
-            <h3>Primary School</h3>
-            <p>The Bhavans Prominent International</p>
-            <small>2013 - 2022</small>
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2>About</h2>
+    </div>
+    <div class="about__grid">
+      <div class="about__text">
+        <p class="about__lede">Juggling complex calculus proofs, physics mechanisms, and coding projects, an 11th-grade PCMC student rapidly trades routine high school routines for high-level problem solving.</p>
+        <p>Between decoding chemical structures and writing clean code, their daily focus shifts constantly from mastering fundamental formulas to preparing for competitive engineering exams.</p>
+        <p>It is a demanding foundation, where every solved equation and debugged line of code directly shapes their journey toward software development, technology, and advanced science.</p>
+      </div>
+      <div class="about__facts">
+        <div class="fact">
+          <span class="fact__num">3</span>
+          <span class="fact__label">years experience coding</span>
         </div>
-    </div>
-    <div class="timeline">
-        <div>
-            <h3>Secondary School</h3>
-            <p>The Brigade School @ JP Nagar</p>
-            <small>2022 - 2026</small>
+        <div class="fact">
+          <span class="fact__num">10+</span>
+          <span class="fact__label">projects completed</span>
         </div>
-    </div>
-
-    <div class="timeline">
-        <div>
-            <h3>Senior Secondary School</h3>
-            <p>BGS National Public School</p>
-            <small>2026 - Present</small>
+        <div class="fact">
+          <span class="fact__num">3</span>
+          <span class="fact__label">major projects</span>
         </div>
+      </div>
     </div>
-</section>
+  </section>
 
-<section id="projects">
-    <h2>Projects</h2>
+  <div class="divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C80,10 160,50 240,30 S400,10 480,30 S640,50 720,30 S880,10 960,30 S1120,50 1200,30 S1360,10 1440,30" fill="none" stroke="var(--line)" stroke-width="1"/></svg></div>
 
-    <div class="project">
-        <h3>All Projects</h3>
-        <p>Projects showcasing my skills and experience in GitHub.</p>
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2>Skills</h2>
     </div>
+    <div class="skills__grid">
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <ul class="pill-list">
+          <li>Python</li><li>JavaScript</li><li>HTML/CSS</li>
+        </ul>
+      </div>
+   <!--   <div class="skill-group">
+        <h3>Practice</h3>
+        <ul class="pill-list">
+          <li>System design</li><li>Mentorship</li><li>Technical writing</li><li>Code review</li>
+        </ul>
+      </div> -->
+    </div>
+  </section>
 
-<section id="contact">
-    <h2>Contact</h2>
+  <div class="divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C80,10 160,50 240,30 S400,10 480,30 S640,50 720,30 S880,10 960,30 S1120,50 1200,30 S1360,10 1440,30" fill="none" stroke="var(--line)" stroke-width="1"/></svg></div>
 
-<p>Email: <a href="mailto:me@thehsiddarth.com">E-Mail</a></p>
-<p>GitHub: <a href="https://github.com/SlashingBeast49" target="_blank">GitHub</a></p>
-<p>LinkedIn: <a href="https://www.linkedin.com/in/thehsiddarth/" target="_blank">LinkedIn</a></p>
-<p>Instagram: <a href="https://www.instagram.com/thehsiddarth" target="_blank">Instagram</a></p>
-</section>
+  <!-- PROJECTS -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2>Selected projects</h2>
+    </div>
+    <div class="work__grid">
 
-<footer>
-    © 2026 H Siddarth
+      <article class="project" data-tone="a">
+        <div class="project__visual"><span class="project__mark">01</span></div>
+        <div class="project__body">
+          <h3>LinkedIn</h3>
+          <p class="project__tag">Building a better professional network - Openly.</p>
+          <p>Curating my professional identity, showcasing technical projects, and expanding my digital footprint.</p>
+          <div class="project__links">
+            <a href="https://www.linkedin.com/in/thehsiddarth" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" data-tone="b">
+        <div class="project__visual"><span class="project__mark">02</span></div>
+        <div class="project__body">
+          <h3>GitHub</h3>
+          <p class="project__tag">Experience · Git</p>
+          <p>Contributing to open-source projects and maintaining a portfolio of technical work.</p>
+          <div class="project__links">
+            <a href="https://github.com/SlashingBeast49" target="_blank">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- <article class="project" data-tone="c">
+        <div class="project__visual"><span class="project__mark">03</span></div>
+        <div class="project__body">
+          <h3>Switchyard</h3>
+          <p class="project__tag">Infrastructure · Terraform, Kafka</p>
+          <p>An event-routing layer that replaced a tangle of point-to-point integrations with a single, observable backbone, cutting incident response time by 60%.</p>
+          <div class="project__links">
+            <a href="#" onclick="return false;">Write-up</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" data-tone="d">
+        <div class="project__visual"><span class="project__mark">04</span></div>
+        <div class="project__body">
+          <h3>Palimpsest</h3>
+          <p class="project__tag">Experiment · WebGL, Svelte</p>
+          <p>A generative type tool that lets designers "grow" typefaces along vector paths — the seed for the tracery motif used across this site.</p>
+          <div class="project__links">
+            <a href="#" onclick="return false;">Try it</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+ <!-- CONTACT -->
+  <div class="divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C80,10 160,50 240,30 S400,10 480,30 S640,50 720,30 S880,10 960,30 S1120,50 1200,30 S1360,10 1440,30" fill="none" stroke="var(--line)" stroke-width="1"/></svg></div>
+
+ 
+  <section class="contact" id="contact">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2>Get in touch</h2>
+    </div>
+    <div class="contact__grid">
+      <div class="contact__text">
+        <p class="about__lede">Have a system worth tracing? I'd like to hear about it.</p>
+        <p>The fastest way to reach me is email. I read everything, and I reply to real messages within a couple of days.</p>
+        <ul class="contact__list">
+          <li><span>Email</span><a href="mailto:me@thehsiddarth.com">me@thehsiddarth.com</a></li>
+          <li><span>GitHub</span><a href="https://github.com/SlashingBeast49" onclick="return false;">github.com/SlashingBeast49</a></li>
+          <li><span>LinkedIn</span><a href="https://linkedin.com/in/thehsiddarth" onclick="return false;">in/thehsiddarth</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>&copy; <span id="year"></span> H Siddarth. Traced, not templated.</p>
+  <a href="#top" class="footer__top">Back to top ↑</a>
 </footer>
 
 <script src="script.js"></script>
-
 </body>
 </html>
