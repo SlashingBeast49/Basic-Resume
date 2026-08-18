@@ -1,0 +1,1286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Terminal — H Siddarth</title>
+  <meta
+    name="description"
+    content="Interactive terminal for H Siddarth."
+  >
+
+  <style>
+    /* =========================================================
+       H SIDDARTH — TERMINAL
+       Standalone single-file terminal
+       ========================================================= */
+
+    :root {
+      --bg: #3e3e3e;
+      --terminal: #111111;
+      --terminal-top: #181818;
+      --border: #292929;
+      --text: #e7e7e4;
+      --muted: #777;
+      --accent: #8cff9b;
+      --selection: rgba(140, 255, 155, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
+    }
+
+    /* ---------------------------------------------------------
+       Background
+       --------------------------------------------------------- */
+
+    .page {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 14px;
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      color: #777;
+    }
+
+    .topbar a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .topbar a:hover {
+      color: #111;
+    }
+
+    /* ---------------------------------------------------------
+       Terminal
+       --------------------------------------------------------- */
+
+    .terminal {
+      width: 100%;
+      height: min(720px, calc(100vh - 100px));
+
+      min-height: 500px;
+
+      background: var(--terminal);
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------------------------------------------------------
+       Terminal header
+       --------------------------------------------------------- */
+
+    .terminal-header {
+      height: 46px;
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 16px;
+
+      background: var(--terminal-top);
+      border-bottom: 1px solid var(--border);
+
+      position: relative;
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .dot.red {
+      background: #ff5f57;
+    }
+
+    .dot.yellow {
+      background: #febc2e;
+    }
+
+    .dot.green {
+      background: #28c840;
+    }
+
+    .terminal-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      color: #666;
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 12px;
+
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* ---------------------------------------------------------
+       Output
+       --------------------------------------------------------- */
+
+    .terminal-body {
+      flex: 1;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      padding: 24px;
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 14px;
+      line-height: 1.7;
+
+      cursor: text;
+
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
+    }
+
+    .terminal-body::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    .terminal-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .terminal-body::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 20px;
+    }
+
+    .line {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .welcome {
+      color: #aaa;
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .error {
+      color: #ff7676;
+    }
+
+    .command-line {
+      margin-top: 2px;
+    }
+
+    .output-block {
+      margin-bottom: 16px;
+    }
+
+    /* ---------------------------------------------------------
+       Input
+       --------------------------------------------------------- */
+
+    .input-row {
+      display: flex;
+      align-items: flex-start;
+
+      gap: 9px;
+
+      margin-top: 2px;
+    }
+
+    .prompt {
+      color: var(--accent);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    #commandInput {
+      flex: 1;
+
+      min-width: 0;
+
+      border: none;
+      outline: none;
+
+      padding: 0;
+      margin: 0;
+
+      background: transparent;
+
+      color: var(--text);
+
+      font: inherit;
+
+      caret-color: var(--accent);
+    }
+
+    #commandInput::selection {
+      background: var(--selection);
+    }
+
+    /* ---------------------------------------------------------
+       Footer
+       --------------------------------------------------------- */
+
+    .terminal-footer {
+      flex-shrink: 0;
+
+      padding: 10px 16px;
+
+      border-top: 1px solid var(--border);
+
+      color: #555;
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 10px;
+
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* ---------------------------------------------------------
+       Mobile
+       --------------------------------------------------------- */
+
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+
+      .topbar {
+        margin-bottom: 10px;
+      }
+
+      .terminal {
+        height: calc(100vh - 65px);
+        min-height: 0;
+        border-radius: 10px;
+      }
+
+      .terminal-body {
+        padding: 18px 15px;
+        font-size: 13px;
+      }
+
+      .terminal-footer {
+        display: none;
+      }
+
+      .terminal-title {
+        font-size: 10px;
+      }
+
+      .prompt {
+        font-size: 12px;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       Reduced motion
+       --------------------------------------------------------- */
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <div class="topbar">
+      <a href="https://thehsiddarth.com">← thehsiddarth.com</a>
+      <span>interactive terminal</span>
+    </div>
+
+    <section class="terminal" id="terminal">
+
+      <!-- Header -->
+      <header class="terminal-header">
+
+        <div class="traffic-lights">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+
+        <div class="terminal-title">
+          siddarth@thehsiddarth — terminal
+        </div>
+
+      </header>
+
+      <!-- Terminal body -->
+      <div
+        class="terminal-body"
+        id="terminalBody"
+        tabindex="0"
+      >
+
+        <div class="output-block">
+
+          <div class="line welcome">
+            H Siddarth — interactive terminal
+          </div>
+
+          <div class="line muted">
+            ─────────────────────────────────────
+          </div>
+
+          <div class="line">
+            Welcome.
+          </div>
+
+          <div class="line">
+            Type <span class="accent">help</span> to see available commands.
+          </div>
+
+          <div class="line">
+            Press <span class="accent">Tab</span> for autocomplete.
+          </div>
+
+        </div>
+
+        <!-- Input -->
+        <div class="input-row">
+
+          <span class="prompt">
+            siddarth@thehsiddarth:~$
+          </span>
+
+          <input
+            id="commandInput"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="Terminal command"
+            autofocus
+          >
+
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="terminal-footer">
+        <span>↑ ↓ history</span>
+        <span>tab autocomplete</span>
+        <span>type "help"</span>
+      </footer>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    /* =========================================================
+       TERMINAL ENGINE
+       ========================================================= */
+
+    const terminalBody = document.getElementById("terminalBody");
+    const input = document.getElementById("commandInput");
+
+
+    /* ---------------------------------------------------------
+       Configuration
+       --------------------------------------------------------- */
+
+    const GITHUB_URL = "https://github.com/SlashingBeast49";
+
+    const commands = [
+      "help",
+      "about",
+      "whoami",
+      "skills",
+      "projects",
+      "contact",
+      "github",
+      "ls",
+      "pwd",
+      "date",
+      "clear",
+      "history",
+      "neofetch",
+      "sudo",
+      "matrix"
+    ];
+
+
+    /* ---------------------------------------------------------
+       Command history
+       --------------------------------------------------------- */
+
+    let history = [];
+    let historyIndex = -1;
+
+
+    /* ---------------------------------------------------------
+       Helpers
+       --------------------------------------------------------- */
+
+    function escapeHTML(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+
+    function scrollToBottom() {
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+
+    function print(text = "", className = "") {
+
+      const block = document.createElement("div");
+
+      block.className = "output-block";
+
+      const lines = String(text).split("\n");
+
+      lines.forEach(line => {
+
+        const div = document.createElement("div");
+
+        div.className = "line";
+
+        if (className) {
+          div.classList.add(className);
+        }
+
+        div.textContent = line;
+
+        block.appendChild(div);
+
+      });
+
+      terminalBody.insertBefore(
+        block,
+        document.querySelector(".input-row")
+      );
+
+      scrollToBottom();
+    }
+
+
+    function printHTML(html) {
+
+      const block = document.createElement("div");
+
+      block.className = "output-block";
+
+      block.innerHTML = html;
+
+      terminalBody.insertBefore(
+        block,
+        document.querySelector(".input-row")
+      );
+
+      scrollToBottom();
+    }
+
+
+    function printCommand(command) {
+
+      const block = document.createElement("div");
+
+      block.className = "output-block command-line";
+
+      block.innerHTML = `
+        <div class="line">
+          <span class="prompt">
+            siddarth@thehsiddarth:~$
+          </span>
+          ${escapeHTML(command)}
+        </div>
+      `;
+
+      terminalBody.insertBefore(
+        block,
+        document.querySelector(".input-row")
+      );
+    }
+
+
+    /* ---------------------------------------------------------
+       Commands
+       --------------------------------------------------------- */
+
+    function runCommand(rawCommand) {
+
+      const command = rawCommand.trim();
+
+      if (!command) {
+        return;
+      }
+
+      printCommand(command);
+
+      const parts = command.split(/\s+/);
+      const cmd = parts[0].toLowerCase();
+      const args = parts.slice(1);
+
+
+      /* HELP */
+
+      if (cmd === "help") {
+
+        printHTML(`
+          <div class="line accent">AVAILABLE COMMANDS</div>
+          <br>
+
+          <div class="line">
+            <span class="accent">about</span>
+            &nbsp;&nbsp;&nbsp;&nbsp; who am I?
+          </div>
+
+          <div class="line">
+            <span class="accent">skills</span>
+            &nbsp;&nbsp;&nbsp; things I work with
+          </div>
+
+          <div class="line">
+            <span class="accent">projects</span>
+            &nbsp; things I've built
+          </div>
+
+          <div class="line">
+            <span class="accent">contact</span>
+            &nbsp;&nbsp; how to reach me
+          </div>
+
+          <div class="line">
+            <span class="accent">github</span>
+            &nbsp;&nbsp;&nbsp; open GitHub
+          </div>
+
+          <div class="line">
+            <span class="accent">ls</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; list files
+          </div>
+
+          <div class="line">
+            <span class="accent">pwd</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current directory
+          </div>
+
+          <div class="line">
+            <span class="accent">whoami</span>
+            &nbsp;&nbsp;&nbsp; identify user
+          </div>
+
+          <div class="line">
+            <span class="accent">date</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current date
+          </div>
+
+          <div class="line">
+            <span class="accent">neofetch</span>
+            &nbsp;&nbsp; system information
+          </div>
+
+          <div class="line">
+            <span class="accent">history</span>
+            &nbsp;&nbsp;&nbsp; command history
+          </div>
+
+          <div class="line">
+            <span class="accent">clear</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; clear terminal
+          </div>
+
+          <br>
+
+          <div class="line muted">
+            There may be other things to discover.
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* ABOUT */
+
+      if (cmd === "about" || cmd === "whoami") {
+
+        printHTML(`
+          <div class="line accent">H SIDDARTH</div>
+          <br>
+
+          <div class="line">
+            Student exploring semi-modern systems.
+          </div>
+
+          <br>
+
+          <div class="line muted">
+            Interested in:
+          </div>
+
+          <div class="line">
+            → programming
+          </div>
+
+          <div class="line">
+            → mathematics
+          </div>
+
+          <div class="line">
+            → physics
+          </div>
+
+          <div class="line">
+            → computers
+          </div>
+
+          <div class="line">
+            → building things
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* SKILLS */
+
+      if (cmd === "skills") {
+
+        printHTML(`
+          <div class="line accent">SKILLS</div>
+          <br>
+
+          <div class="line">
+            Python
+          </div>
+
+          <div class="line">
+            JavaScript
+          </div>
+
+          <div class="line">
+            HTML / CSS
+          </div>
+
+          <div class="line">
+            Git
+          </div>
+
+          <div class="line">
+            Linux
+          </div>
+
+          <div class="line">
+            Creative coding
+          </div>
+
+          <div class="line">
+            Problem solving
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* PROJECTS */
+
+      if (cmd === "projects") {
+
+        printHTML(`
+          <div class="line accent">PROJECTS/</div>
+          <br>
+
+          <div class="line">
+            <span class="accent">01</span>
+            &nbsp; Project Helix
+          </div>
+
+          <div class="line">
+            <span class="accent">02</span>
+            &nbsp; Personal Website
+          </div>
+
+          <div class="line">
+            <span class="accent">03</span>
+            &nbsp; Euler Totient
+          </div>
+
+          <br>
+        `);
+
+        return;
+      }
+
+
+      /* LS */
+
+      if (cmd === "ls") {
+
+        printHTML(`
+          <div class="line">
+            <span class="accent">about.txt</span>
+          </div>
+
+          <div class="line">
+            <span class="accent">projects/</span>
+          </div>
+
+          <div class="line">
+            <span class="accent">experiments/</span>
+          </div>
+
+          <div class="line">
+            <span class="accent">thoughts/</span>
+          </div>
+
+          <div class="line">
+            <span class="accent">contact.txt</span>
+          </div>
+
+          <div class="line">
+            <span class="muted">.secrets</span>
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* PWD */
+
+      if (cmd === "pwd") {
+
+        print("/home/siddarth");
+
+        return;
+      }
+
+
+      /* CONTACT */
+
+      if (cmd === "contact") {
+
+        printHTML(`
+          <div class="line accent">CONTACT</div>
+          <br>
+
+          <div class="line">
+            me@thehsiddarth.com
+          </div>
+
+          <div class="line">
+            github.com/SlashingBeast49
+          </div>
+
+          <div class="line">
+            linkedin.com/in/thehsiddarth
+          </div>
+
+          <br>
+
+            <div class="line muted">
+                Or reach out on Instagram.
+            </div>
+        `);
+
+        return;
+      }
+
+
+      /* GITHUB */
+
+      if (cmd === "github") {
+
+        print("Opening GitHub...", "muted");
+
+        setTimeout(() => {
+          window.open(GITHUB_URL, "_blank");
+        }, 350);
+
+        return;
+      }
+
+
+      /* DATE */
+
+      if (cmd === "date") {
+
+        print(new Date().toString());
+
+        return;
+      }
+
+
+      /* HISTORY */
+
+      if (cmd === "history") {
+
+        if (history.length === 0) {
+          print("No command history.");
+          return;
+        }
+
+        history.forEach((item, index) => {
+
+          const block = document.createElement("div");
+
+          block.className = "output-block";
+
+          block.innerHTML = `
+            <div class="line">
+              <span class="muted">${String(index + 1).padStart(3, " ")}</span>
+              &nbsp;${escapeHTML(item)}
+            </div>
+          `;
+
+          terminalBody.insertBefore(
+            block,
+            document.querySelector(".input-row")
+          );
+
+        });
+
+        scrollToBottom();
+
+        return;
+      }
+
+
+      /* NEOFETCH */
+
+      if (cmd === "neofetch") {
+
+        printHTML(`
+          <div class="line accent">
+             __  __
+          </div>
+
+          <div class="line accent">
+            |  \\/  |  H SIDDARTH
+          </div>
+
+          <div class="line accent">
+            | |\\/| |  ───────────
+          </div>
+
+          <div class="line accent">
+            | |  | |  student
+          </div>
+
+          <div class="line accent">
+            |_|  |_|  builder
+          </div>
+
+          <br>
+
+          <div class="line">
+            OS:      curiosity
+          </div>
+
+          <div class="line">
+            Shell:   imagination
+          </div>
+
+          <div class="line">
+            Editor:  whatever works
+          </div>
+
+          <div class="line">
+            Coffee:  probably
+          </div>
+
+          <div class="line">
+            Status:  building
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* SUDO */
+
+      if (cmd === "sudo") {
+
+        printHTML(`
+          <div class="line">
+            <input>[sudo] password for siddarth:
+          </div>
+
+          <br>
+
+          <div class="line error">
+            Permission denied.
+          </div>
+
+          <div class="line muted">
+            Nice try.
+          </div>
+        `);
+
+        return;
+      }
+
+
+      /* MATRIX */
+
+      if (cmd === "matrix") {
+
+        printHTML(`
+          <div class="line accent">
+            Wake up, Siddarth...
+          </div>
+
+          <div class="line">
+            The system is watching.
+          </div>
+
+          <div class="line muted">
+            (There is no Matrix mode. Yet.)
+          </div>
+        `);
+
+        return;
+      }
+
+      /* SLEEP */
+      if (cmd === "sleep") {
+
+        printHTML(`
+          <div class="line accent">
+            Goodnight, Siddarth...
+          </div>
+
+          <div class="line muted">
+            (There is no sleep mode. Yet.)
+          </div>
+        `);
+
+        return;
+      }
+
+
+
+      /* CLEAR */
+
+      if (cmd === "clear") {
+
+        document.querySelectorAll(
+          ".terminal-body > .output-block"
+        ).forEach(element => element.remove());
+
+        return;
+      }
+
+      if (cmd === "exit") {
+
+        printHTML(`
+          <div class="line muted">
+            This is a web terminal. There is no exit.
+          </div>
+        `);
+
+        return;
+      }
+      if (cmd == "home"){
+
+        print("Opening Home...", "muted");
+
+        setTimeout(() => {
+          window.open("../index.html", "_blank");
+        }, 350);
+
+        return;
+      }
+
+
+      /* UNKNOWN COMMAND */
+
+      printHTML(`
+        <div class="line error">
+          command not found: ${escapeHTML(cmd)}
+        </div>
+
+        <div class="line muted">
+          Type "help" for available commands.
+        </div>
+      `);
+
+    }
+
+
+    /* ---------------------------------------------------------
+       Enter command
+       --------------------------------------------------------- */
+
+    input.addEventListener("keydown", event => {
+
+      if (event.key === "Enter") {
+
+        const command = input.value.trim();
+
+        if (!command) {
+          return;
+        }
+
+        history.push(command);
+
+        historyIndex = history.length;
+
+        runCommand(command);
+
+        input.value = "";
+
+        scrollToBottom();
+      }
+
+    });
+
+
+    /* ---------------------------------------------------------
+       Command history — Arrow Up
+       --------------------------------------------------------- */
+
+    input.addEventListener("keydown", event => {
+
+      if (event.key === "ArrowUp") {
+
+        event.preventDefault();
+
+        if (history.length === 0) {
+          return;
+        }
+
+        historyIndex = Math.max(
+          0,
+          historyIndex - 1
+        );
+
+        input.value = history[historyIndex];
+
+        requestAnimationFrame(() => {
+          input.setSelectionRange(
+            input.value.length,
+            input.value.length
+          );
+        });
+
+      }
+
+    });
+
+
+    /* ---------------------------------------------------------
+       Command history — Arrow Down
+       --------------------------------------------------------- */
+
+    input.addEventListener("keydown", event => {
+
+      if (event.key === "ArrowDown") {
+
+        event.preventDefault();
+
+        if (history.length === 0) {
+          return;
+        }
+
+        historyIndex = Math.min(
+          history.length,
+          historyIndex + 1
+        );
+
+        input.value =
+          historyIndex === history.length
+            ? ""
+            : history[historyIndex];
+
+      }
+
+    });
+
+
+    /* ---------------------------------------------------------
+       Tab autocomplete
+       --------------------------------------------------------- */
+
+    input.addEventListener("keydown", event => {
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      event.preventDefault();
+
+      const value = input.value
+        .trim()
+        .toLowerCase();
+
+      if (!value) {
+        return;
+      }
+
+      const matches = commands.filter(command =>
+        command.startsWith(value)
+      );
+
+      if (matches.length === 1) {
+
+        input.value = matches[0];
+
+      } else if (matches.length > 1) {
+
+        printCommand(value);
+
+        printHTML(`
+          <div class="line muted">
+            ${matches.join("    ")}
+          </div>
+        `);
+
+      }
+
+    });
+
+
+    /* ---------------------------------------------------------
+       Click terminal → focus input
+       --------------------------------------------------------- */
+
+    terminalBody.addEventListener("click", () => {
+      input.focus();
+    });
+
+
+    document.querySelector(".terminal").addEventListener("click", () => {
+      input.focus();
+    });
+
+
+    /* ---------------------------------------------------------
+       Keyboard shortcut
+       --------------------------------------------------------- */
+
+    document.addEventListener("keydown", event => {
+
+      /*
+       Press "/" anywhere to focus terminal.
+       Don't interfere with typing in another input.
+      */
+
+      if (
+        event.key === "/" &&
+        document.activeElement !== input
+      ) {
+
+        event.preventDefault();
+
+        input.focus();
+
+      }
+
+    });
+
+
+    /* ---------------------------------------------------------
+       Initial focus
+       --------------------------------------------------------- */
+
+    window.addEventListener("load", () => {
+      input.focus();
+      scrollToBottom();
+    });
+
+  </script>
+
+</body>
+</html>

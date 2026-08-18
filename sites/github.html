@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H Siddarth | Personal Website & Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="..\style.css">
+</head>
+<body>
+
+<!-- traceline svg divider template used across sections -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="nav__mark" href="#top">H·S</a>
+  <nav class="nav__links">
+    <a href="../index.html">Home</a>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark and light mode" title="Toggle theme">
+    <span class="theme-toggle__track">
+      <span class="theme-toggle__thumb"></span>
+    </span>
+    <span class="theme-toggle__labels">
+      <span class="lbl-dark">dark</span>
+      <span class="lbl-light">light</span>
+    </span>
+  </button>
+  <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="../index.html">Home</a>
+</div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__content">
+      <h1 class="hero__name">Github</h1>
+      <p class="hero__role">A page to highlight my GitHub projects and contributions.</p>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span></span>
+      <p>scroll</p>
+    </div>
+    <svg class="hero__trace" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+      <path id="heroTracePath" d="M0,120 C120,20 240,180 360,100 S600,20 720,110 S960,190 1080,90 S1320,10 1440,100" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+    </svg>
+  </section>
+  
+  <!-- PROJECTS -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <h2>My Github Projects</h2>
+    </div>
+    <div class="work__grid">
+
+      <article class="project" data-tone="a">
+        <div class="project__visual"><span class="project__mark">01</span></div>
+        <div class="project__body">
+          <h3>Euler's Totient Function Calculator</h3>
+          <p class="project__tag">Python · Math</p>
+          <p>A simple calculator to compute Euler's totient function for given integers.</p>
+          <div class="project__links">
+            <a href="https://github.com/SlashingBeast49/Eulers-Totient" target="_blank">Source Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project" data-tone="b">
+        <div class="project__visual"><span class="project__mark">02</span></div>
+        <div class="project__body">
+          <h3>GitHub About</h3>
+          <p class="project__tag">Git</p>
+          <p>A Simple About ReadMe.md File for my GitHub profile.</p>
+          <div class="project__links">
+            <a href="https://github.com/SlashingBeast49/SlashingBeast49" target="_blank">Source Code</a>
+          </div>
+        </div>
+      </article>
+          <article class="project" data-tone="b">
+        <div class="project__visual"><span class="project__mark">03</span></div>
+        <div class="project__body">
+          <h3>Project Helix</h3>
+          <p class="project__tag">Chemistry . Python . ML</p>
+          <p>A simple in progress ML project exploring chemical properties of given atomic numbers.</p>
+          <div class="project__links">
+            <a href="https://github.com/SlashingBeast49/Project-Helix" target="_blank">Source Code</a>
+          </div>
+        </div>
+      </article>
+      <article class="project" data-tone="b">
+        <div class="project__visual"><span class="project__mark">04</span></div>
+        <div class="project__body">
+          <h3>Personal Website</h3>
+          <p class="project__tag">HTML . CSS . JavaScript</p>
+          <p>A simple personal website to showcase my work and projects.</p>
+          <div class="project__links">
+            <a href="https://github.com/SlashingBeast49/Basic-Resume" target="_blank">Source Code</a>
+          </div>
+        </div>
+      </article>
+  <div class="divider"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C80,10 160,50 240,30 S400,10 480,30 S640,50 720,30 S880,10 960,30 S1120,50 1200,30 S1360,10 1440,30" fill="none" stroke="var(--line)" stroke-width="1"/></svg></div>
+  
+
+</main>
+
+<footer class="footer">
+  <p> <span id="year"></span> H Siddarth. Traced, not templated.</p>
+  <a href="#top" class="footer__top">Back to top ↑</a>
+</footer>
+
+<script src="..\script.js"></script>
+</body>
+</html>
