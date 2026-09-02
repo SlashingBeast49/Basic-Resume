@@ -1,90 +1,113 @@
-(function () {
-  "use strict";
+const root = document.documentElement;
+const themeToggle = document.getElementById("themeToggle");
+const menuToggle = document.getElementById("menuToggle");
+const mobileMenu = document.getElementById("mobileMenu");
+const year = document.getElementById("year");
 
-  var root = document.documentElement;
-  var toggle = document.getElementById("themeToggle");
-  var STORAGE_KEY = "portfolio-theme";
+year.textContent = new Date().getFullYear();
 
-  function systemPref() {
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
-      ? "light"
-      : "dark";
-  }
+const savedTheme = localStorage.getItem("hs-theme");
+if (savedTheme === "light" || savedTheme === "dark") root.dataset.theme = savedTheme;
 
-  function applyTheme(theme) {
-    root.setAttribute("data-theme", theme);
-    toggle.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
-  }
+themeToggle.addEventListener("click", () => {
+  const next = root.dataset.theme === "light" ? "dark" : "light";
+  root.dataset.theme = next;
+  localStorage.setItem("hs-theme", next);
+});
 
-  // Init: manual override in storage wins, otherwise follow system.
-  var stored = null;
-  try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
-  applyTheme(stored || systemPref());
+menuToggle.addEventListener("click", () => {
+  const isOpen = !mobileMenu.hidden;
+  mobileMenu.hidden = isOpen;
+  menuToggle.setAttribute("aria-expanded", String(!isOpen));
+  menuToggle.setAttribute("aria-label", isOpen ? "Open navigation" : "Close navigation");
+});
 
-  // Keep following system changes until the user manually picks a theme.
-  if (window.matchMedia) {
-    window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (e) {
-      var manual = null;
-      try { manual = localStorage.getItem(STORAGE_KEY); } catch (err) {}
-      if (!manual) applyTheme(e.matches ? "light" : "dark");
-    });
-  }
-
-  toggle.addEventListener("click", function () {
-    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+mobileMenu.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    mobileMenu.hidden = true;
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open navigation");
   });
+});
 
-  // Nav shadow on scroll
-  var nav = document.getElementById("nav");
-  window.addEventListener("scroll", function () {
-    nav.classList.toggle("scrolled", window.scrollY > 8);
-  }, { passive: true });
+const output = document.getElementById("terminalOutput");
+const form = document.getElementById("terminalForm");
+const input = document.getElementById("terminalInput");
 
-  // Mobile menu
-  var burger = document.getElementById("burger");
-  var mobileMenu = document.getElementById("mobileMenu");
-  burger.addEventListener("click", function () {
-    var open = mobileMenu.classList.toggle("open");
-    burger.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-  mobileMenu.querySelectorAll("a").forEach(function (a) {
-    a.addEventListener("click", function () {
-      mobileMenu.classList.remove("open");
-      burger.setAttribute("aria-expanded", "false");
-    });
-  });
+const commands = {
+  help: () => `available:
+  about       short bio
+  whoami      identify the human
+  projects    serious projects
+  sidequests  unnecessary projects
+  now         what I'm doing
+  skills      things I'm learning
+  journey     the timeline
+  contact     links
+  ls          website sections
+  cat about.txt
+  neofetch    totally accurate system info
+  clear       clear terminal
+  exit        return to the top`,
+  about: () => "H. Siddarth — 11th-grade PCMC student exploring programming, data science, AI and software by building things.",
+  whoami: () => "h.siddarth\\nstudent / builder / professional debugger of his own code",
+  projects: () => "Project Helix\\nProject Forge\\nPROOF (in development)",
+  sidequests: () => "Rickroll Checker\\nAbsurd README Generator\\nProject Φ\\n...more questionable ideas incoming",
+  now: () => "JEE prep\\nPython + data science\\nbuilding Helix / Forge / PROOF",
+  skills: () => "Python · HTML · CSS · JavaScript\\npandas · JSON/CSV · SQLite · Git/GitHub\\nexploring: data science · ML · AI · APIs",
+  journey: () => "started programming → small Python projects → Forge → Helix → data science / AI / ML → current JEE + coding phase",
+  contact: () => "email: me@thehsiddarth.com\\ngithub: SlashingBeast49\\nx: @thehsiddarth\\nlinkedin: H. Siddarth",
+  ls: () => "about/  projects/  sidequests/  now/  lab/  notes/  journey/  uses/  contact/  terminal/",
+  "cat about.txt": () => "I learn best by building things.\\nSome are serious. Some are experiments. Some are completely unnecessary.",
+  neofetch: () => "        H S\\n   ┌─────────────┐\\n   │ HS / student │\\n   │ PCMC + JEE   │\\n   │ Python       │\\n   │ data curious │\\n   └─────────────┘\\n uptime: still going",
+  sudo: () => "nice try. this terminal has absolutely no privileges.",
+  exit: () => "There is no real terminal to exit. Try `home` or scroll up.",
+  home: () => "Use the page navigation, or type `ls` to see the map."
+};
 
-  // Scroll reveal for sections
-  var revealTargets = document.querySelectorAll(
-    ".about__grid, .skills__grid, .work__grid, .contact__grid, .section-head"
-  );
-  revealTargets.forEach(function (el) { el.classList.add("reveal"); });
+function print(text, kind="normal") {
+  const div = document.createElement("p");
+  div.className = `terminal-line ${kind}`;
+  div.textContent = text;
+  output.appendChild(div);
+  output.scrollTop = output.scrollHeight;
+}
 
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealTargets.forEach(function (el) { io.observe(el); });
+print("HS_TERMINAL v0.1");
+print("Type `help` for commands.");
+print("");
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const command = input.value.trim().toLowerCase();
+  if (!command) return;
+  print(`guest@h-siddarth:~$ ${command}`, "command");
+
+  if (command === "clear") {
+    output.innerHTML = "";
   } else {
-    revealTargets.forEach(function (el) { el.classList.add("in-view"); });
+    const result = commands[command];
+    print(result ? result() : `command not found: ${command}\\ntry: help`);
   }
+  input.value = "";
+});
 
-  // Contact form (front-end only demo)
-  var form = document.getElementById("contactForm");
-  var note = document.getElementById("contactNote");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    note.textContent = "Message received — I'll reply soon.";
-    form.reset();
+document.getElementById("terminal").addEventListener("click", () => input.focus());
+
+const revealTargets = document.querySelectorAll(".project-card,.sidequest-card,.notes-grid article,.timeline>div");
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = "1";
+      entry.target.style.transform = entry.target.style.transform || "translateY(0)";
+      observer.unobserve(entry.target);
+    }
   });
+}, {threshold: .08});
 
-  // Footer year
-  document.getElementById("year").textContent = new Date().getFullYear();
-})();
+revealTargets.forEach(el => {
+  el.style.opacity = "0";
+  el.style.transform = "translateY(12px)";
+  el.style.transition = "opacity .5s ease, transform .5s ease";
+  observer.observe(el);
+});
