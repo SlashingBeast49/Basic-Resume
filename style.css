@@ -159,3 +159,44 @@ h1 em{font-family:"Instrument Serif",serif;font-weight:400;letter-spacing:-.04em
   .site-footer{flex-direction:column}.terminal-output{height:240px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+.devotional {
+  text-align: center;
+  padding: 48px 20px 35px;
+  border-top: 1px solid var(--border);
+}
+
+.devotional-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 3px;
+  opacity: 0.5;
+  margin-bottom: 22px;
+}
+
+.devotional h2 {
+  font-family: serif;
+  font-size: 25px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.devotional p {
+  font-family: serif;
+  font-size: 16px;
+  line-height: 2.2;
+  opacity: 0.8;
+  max-width: 650px;
+  margin: auto;
+}
+
+@media (max-width: 600px) {
+  .devotional {
+    padding: 38px 16px 28px;
+  }
+
+  .devotional p {
+    font-size: 14px;
+  }
+}
