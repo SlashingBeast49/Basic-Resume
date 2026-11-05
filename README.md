@@ -45,30 +45,6 @@ My current areas of interest include:
 | JavaScript   | Interactivity                 |
 | GitHub Pages | Hosting                       |
 
-## 📁 Project Structure
-
-```text
-Basic-Resume/
-│
-├── sites/
-│   └── Additional website files
-│
-├── index.html
-├── style.css
-├── script.js
-│
-├── dark.jpg
-├── light.jpg
-│
-├── CNAME
-├── README.md
-├── LICENSE
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── .gitignore
-└── .gitattributes
-```
-
 ## 🚀 Run Locally
 
 Clone the repository:
