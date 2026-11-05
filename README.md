@@ -1,6 +1,5 @@
 # H Siddarth — Personal Resume Website
 
-![Website Preview](preview.png)
 
 A modern, responsive personal resume and portfolio website built with **HTML, CSS, and JavaScript**.
 
