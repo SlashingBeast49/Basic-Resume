@@ -1,8 +1,8 @@
-name: Deploy thehsiddarth.com with Helix Subpage
+name: Deploy thehsiddarth.com with Helix and Proof Subpages
 
 on:
   push:
-    branches: [main] # Change to master if your default branch is master
+    branches: [main] # or master
   workflow_dispatch:
 
 permissions:
@@ -24,12 +24,33 @@ jobs:
       - name: Checkout basic resume (Main Site)
         uses: actions/checkout@v4
 
-      - name: Checkout Project Helix into /helix folder
+      # --- 1. Setup Project Helix at /helix ---
+      - name: Checkout Project Helix
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/Project-Helix
-          path: helix
+          path: _temp_helix
 
+      - name: Move Helix dashboard files to /helix
+        run: |
+          mkdir -p helix
+          cp -r _temp_helix/dashboard/* helix/
+          rm -rf _temp_helix
+
+      # --- 2. Setup PROOF at /proof ---
+      - name: Checkout PROOF
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/PROOF
+          path: _temp_proof
+
+      - name: Move PROOF static files to /proof
+        run: |
+          mkdir -p proof
+          cp -r _temp_proof/proof/static/* proof/
+          rm -rf _temp_proof
+
+      # --- 3. Deploy everything together ---
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
