@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Prevent indexing of raw build assets, private script bundles, or dotfiles
+Disallow: /.*
+Disallow: /assets/private/
+
+# Sitemap location
+Sitemap: https://thehsiddarth.com/sitemap.xml
