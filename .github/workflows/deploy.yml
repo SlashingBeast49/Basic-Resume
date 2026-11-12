@@ -1,4 +1,4 @@
-name: Deploy thehsiddarth.com with Helix and Proof Subpages
+name: Deploy thehsiddarth.com with Social media shortcuts added
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
           cp -r _temp_proof/proof/static/* proof/
           rm -rf _temp_proof
 
-      # --- 3. Deploy everything together ---
+     
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -62,3 +62,32 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+       
+      - name: Generate Social Redirects
+        run: |
+          create_redirect() {
+            mkdir -p "$1"
+            cat <<EOF > "$1/index.html"
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>Redirecting...</title>
+            <meta http-equiv="refresh" content="0; url=$2">
+            <link rel="canonical" href="$2">
+            <script>window.location.replace("$2");</script>
+          </head>
+          <body>
+            <p>Redirecting to <a href="$2">$2</a>...</p>
+          </body>
+          </html>
+          EOF
+          }
+
+          create_redirect "insta" "https://www.instagram.com/thehsiddarth"
+          create_redirect "linkedin" "https://www.linkedin.com/in/thehsiddarth"
+          create_redirect "github" "https://github.com/SlashingBeast49"
+          create_redirect "xpe" "https://x.com/@thehsiddarth"
+          create_redirect "xpr" "https://x.com/@thehsprojects"
+          create_redirect "cav" "https://cavalloenterprises.in/"
