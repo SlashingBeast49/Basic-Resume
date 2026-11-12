@@ -2,7 +2,7 @@ name: Deploy thehsiddarth.com with Social media shortcuts added
 
 on:
   push:
-    branches: [main] # or master
+    branches: [main] 
   workflow_dispatch:
 
 permissions:
@@ -23,8 +23,7 @@ jobs:
     steps:
       - name: Checkout basic resume (Main Site)
         uses: actions/checkout@v4
-
-      # --- 1. Setup Project Helix at /helix ---
+        
       - name: Checkout Project Helix
         uses: actions/checkout@v4
         with:
@@ -37,33 +36,11 @@ jobs:
           cp -r _temp_helix/dashboard/* helix/
           rm -rf _temp_helix
 
-      # --- 2. Setup PROOF at /proof ---
       - name: Checkout PROOF
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/PROOF
           path: _temp_proof
-
-      - name: Move PROOF static files to /proof
-        run: |
-          mkdir -p proof
-          cp -r _temp_proof/proof/static/* proof/
-          rm -rf _temp_proof
-
-     
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        
-       
       - name: Generate Social Redirects
         run: |
           create_redirect() {
@@ -91,3 +68,25 @@ jobs:
           create_redirect "xpe" "https://x.com/@thehsiddarth"
           create_redirect "xpr" "https://x.com/@thehsprojects"
           create_redirect "cav" "https://cavalloenterprises.in/"
+
+      - name: Move PROOF static files to /proof
+        run: |
+          mkdir -p proof
+          cp -r _temp_proof/proof/static/* proof/
+          rm -rf _temp_proof
+
+     
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+       
+      
