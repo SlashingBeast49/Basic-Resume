@@ -7,20 +7,31 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Project Helix -->
   <url>
-    <loc>https://thehsiddarth.com/helix/index.html</loc>
+    <loc>https://thehsiddarth.com/helix/</loc>
     <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- PROOF Subpage -->
+  
   <url>
-    <loc>https://thehsiddarth.com/proof/index.html</loc>
+    <loc>https://thehsiddarth.com/careal/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://thehsiddarth.com/projects/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thehsiddarth.com/proof/</loc>
     <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  
 </urlset>
