@@ -35,7 +35,11 @@ jobs:
           mkdir -p helix
           cp -r _temp_helix/dashboard/* helix/
           rm -rf _temp_helix
-
+      - name: Checkout CaReal
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/CaReal
+          path: careal
       - name: Checkout PROOF
         uses: actions/checkout@v4
         with:
